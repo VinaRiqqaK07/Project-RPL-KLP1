@@ -13,7 +13,7 @@
     />
     @vite("resources/css/app.css")
   </head>
-  <body class="h-[100vh] bg-sunset-orange">
+  <body class="h-[100vh]">
     {{ $slot }}
   </body>
 </html>
