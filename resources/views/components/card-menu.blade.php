@@ -1,4 +1,4 @@
-<section class="flex w-fit flex-col gap-3 bg-[#F3F3F3] px-2 py-4">
+<section class="flex w-fit flex-col gap-3 bg-[#F3F3F3] px-2 py-4 my-2 mx-4 rounded-lg">
   <img
     src="https://www.bifolcomatty.co.uk/wp-content/uploads/2019/08/placeholder-square.jpg"
     alt=""

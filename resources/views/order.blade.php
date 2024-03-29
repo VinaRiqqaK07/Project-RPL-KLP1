@@ -1,6 +1,6 @@
 <x-layouts.app>
   <x-slot:slot>
-    <div class="h-full">
+    <div class="h-full bg-sunset-orange">
       <header class="flex flex-col gap-4 px-8 py-6">
         <section class="flex gap-4">
           <img
