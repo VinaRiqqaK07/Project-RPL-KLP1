@@ -20,6 +20,10 @@ class MenuResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
+    protected static ?int $navigationSort = 1;
+
+    protected static ?string $navigationLabel = 'Menu';
+
     public static function form(Form $form): Form
     {
         return $form
@@ -39,25 +43,23 @@ class MenuResource extends Resource
                                     ->numeric()
                                     ->required(),
                                 Forms\Components\TextInput::make('quantity')
-                                    ->numeric(),
+                                    ->numeric()
+                                    ->visible(fn(\Filament\Forms\Get $get):bool => $get('manage_stock')),
                                 Forms\Components\MarkdownEditor::make('description')
-                                    ->disableToolbarButtons(
-                                        ['attachFiles']
-                                    )
-                                    ->translateLabel()
+                                    ->disableAllToolbarButtons()
                                     ->required()
                                     ->columnSpan('full'),
                             ])
                             ->columns(2),
 
-                        Forms\Components\Section::make(__('Image'))
+                        Forms\Components\Section::make('Image')
                             ->schema([
                                 // SpatieMediaLibraryFileUpload::make('image')
                                 //     ->image()
                                 //     ->imageEditor()
                                 //     ->imageResizeMode('contain')
                                 //     ->imageCropAspectRatio('16:9')
-                                //     ->collection('post/images')
+                                //     ->collection('menu-images')
                                 //     ->hiddenLabel()
                             ])
                             ->collapsible(),
@@ -71,13 +73,14 @@ class MenuResource extends Resource
                                 Forms\Components\Toggle::make('status')
                                     ->label('Ready')
                                     ->default(true),
-                                Forms\Components\Toggle::make('check_stock')
+                                Forms\Components\Toggle::make('manage_stock')
                                     ->label('Check Stock')
-                                    ->default(true),
+                                    ->live(),
                                 Forms\Components\Select::make('discount_id')
                                     ->label('Discount')
-                                    // ->relationship('discount', 'name')
-                                    ->native(false),
+                                    ->native(false)
+                                    ->relationship('discount')
+                                    ->getOptionLabelFromRecordUsing(fn($record) => $record->name . ' - ' . $record->percentage)
                             ])
                             ->columns(1),
                     ])
@@ -92,8 +95,11 @@ class MenuResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('name')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('categories_id')
+                Tables\Columns\TextColumn::make('category.name')
                     ->searchable(),
+                Tables\Columns\TextColumn::make('discount')
+                    ->searchable()
+                    ->formatStateUsing(fn ($state) => $state->name . ' - ' . $state->percentage),
                 Tables\Columns\TextColumn::make('price')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('quantity')
