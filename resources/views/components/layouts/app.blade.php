@@ -13,7 +13,9 @@
     />
     @vite("resources/css/app.css")
   </head>
-  <body class="h-[100vh]">
-    {{ $slot }}
+  <body class="flex h-auto justify-center bg-gray-300">
+    <div class="relative w-[400px]">
+      {{ $slot }}
+    </div>
   </body>
 </html>

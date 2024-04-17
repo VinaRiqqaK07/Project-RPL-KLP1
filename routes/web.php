@@ -19,8 +19,8 @@ Route::get('/', function () {
 
 Route::get('/order', function () {
     return view('order');
-});
+})->name('order');
 
 Route::get('/order/checkout', function () {
     return view('check-out');
-});
+})->name('checkout');
