@@ -1,3 +1,7 @@
+@php
+  $category = "All";
+@endphp
+
 <x-layouts.app>
   <x-slot:slot>
     <div class="h-full bg-sunset-orange">
@@ -21,14 +25,9 @@
               <input type="text" placeholder="Cari menu..." class="text-xs outline-none" />
             </div>
 
-            <div>
-              <img
-                src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR0bfs39SfGEX262PHmiU2eRQjOHZSfIST7bYfyJWewVw&s"
-                alt="search"
-                width="14"
-                height="14"
-              />
-            </div>
+            <a href="{{ route("checkout") }}">
+              <i class="fa-solid fa-cart-shopping"></i>
+            </a>
           </div>
         </section>
       </header>
@@ -38,12 +37,12 @@
           <p class="text-sm font-bold">Kategori Menu</p>
 
           <div class="flex justify-between px-6">
-            <x-category>
+            <x-category :active="$category == 'All'">
               <x-slot:icon>fa-solid fa-utensils</x-slot>
               <x-slot:name>All</x-slot>
             </x-category>
 
-            <x-category>
+            <x-category :active="$category == 'Makanan'">
               <x-slot:icon>fa-solid fa-bowl-food</x-slot>
               <x-slot:name>Makanan</x-slot>
             </x-category>
@@ -60,7 +59,11 @@
           </div>
         </section>
 
-        <section class="flex max-h-[62.5vh] flex-wrap justify-between overflow-y-auto">
+        <section class="flex max-h-[68.5vh] flex-wrap justify-between overflow-y-auto">
+          <x-card-menu />
+          <x-card-menu />
+          <x-card-menu />
+          <x-card-menu />
           <x-card-menu />
           <x-card-menu />
           <x-card-menu />
@@ -68,7 +71,54 @@
           <x-card-menu />
           <x-card-menu />
         </section>
+
+        <div id="modalBackdrop" class="fixed left-0 top-0 hidden h-full w-full bg-gray-500 bg-opacity-50" />
       </main>
+
+      <div id="menuDetail" class="z-50 hidden">
+        <x-menu-detail />
+      </div>
+
+      <div id="toast" class="z-50 hidden">
+        <x-toast />
+      </div>
     </div>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        var modalBackdrop = document.getElementById('modalBackdrop');
+
+        var showMenuDetailButton = document.getElementById('showMenuDetail');
+        var menuDetail = document.getElementById('menuDetail');
+        var closeMenuDetailButton = document.getElementById('closeMenuDetail');
+
+        var showToastButton = document.getElementById('showToast');
+        var toast = document.getElementById('toast');
+        var closeToast = document.getElementById('closeToast');
+
+        showMenuDetailButton.addEventListener('click', () => {
+          modalBackdrop.classList.remove('hidden');
+          menuDetail.classList.remove('hidden');
+        });
+
+        closeMenuDetailButton.addEventListener('click', () => {
+          menuDetail.classList.add('hidden');
+          modalBackdrop.classList.add('hidden');
+        });
+
+        showToastButton.addEventListener('click', () => {
+          menuDetail.classList.add('hidden');
+          modalBackdrop.classList.add('hidden');
+          toast.classList.remove('hidden');
+          setTimeout(() => {
+            toast.classList.add('hidden');
+          }, 5000);
+        });
+
+        closeToast.addEventListener('click', () => {
+          toast.classList.add('hidden');
+        });
+      });
+    </script>
   </x-slot>
 </x-layouts.app>
