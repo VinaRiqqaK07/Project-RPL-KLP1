@@ -15,5 +15,5 @@
     </p>
   </div>
 
-  <p class="text-sm font-semibold">{{ $price ?? "Rp.20.000" }}</p>
+  <p class="text-sm font-semibold">{{ $price ?? "Rp20,000" }}</p>
 </section>
