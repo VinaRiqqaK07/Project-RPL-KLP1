@@ -25,7 +25,7 @@
               <input type="text" placeholder="Cari menu..." class="text-xs outline-none" />
             </div>
 
-            <a href="{{ route("checkout") }}">
+            <a href="/order/checkout">
               <i class="fa-solid fa-cart-shopping"></i>
             </a>
           </div>
@@ -59,20 +59,29 @@
           </div>
         </section>
 
-        <section class="flex max-h-[68.5vh] flex-wrap justify-between overflow-y-auto">
-          <x-card-menu />
-          <x-card-menu />
-          <x-card-menu />
-          <x-card-menu />
-          <x-card-menu />
-          <x-card-menu />
-          <x-card-menu />
-          <x-card-menu />
-          <x-card-menu />
-          <x-card-menu />
+        <section class="flex max-h-[62.5vh] flex-wrap justify-between overflow-y-auto">
+          @if(!empty($menus))
+            @foreach ($menus as $menu)
+              <x-card-menu>
+                <x-slot:name>{{ $menu->name }}</x-slot>
+                <x-slot:description>{{ $menu->description }}</x-slot>
+                <x-slot:price>Rp{{ number_format($menu->price) }}</x-slot>
+              </x-card-menu>
+            @endforeach
+            <x-card-menu />
+            <x-card-menu />
+            <x-card-menu />
+            <x-card-menu />
+            <x-card-menu />
+            <x-card-menu />
+            <x-card-menu />
+          @else
+              <!--Set Menu kosong bagaimana-->
+              <div></div>
+          @endif
         </section>
 
-        <div id="modalBackdrop" class="fixed left-0 top-0 hidden h-full w-full bg-gray-500 bg-opacity-50" />
+        <div id="modalBackdrop" class="fixed left-0 top-0 hidden h-full w-full bg-gray-500 bg-opacity-50"></div>
       </main>
 
       <div id="menuDetail" class="z-50 hidden">

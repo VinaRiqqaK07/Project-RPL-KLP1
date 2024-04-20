@@ -1,0 +1,18 @@
+<x-layouts.app>
+  <x-slot:slot>
+    <div class="h-[100vh] bg-orange-500">
+      <main class="h-full w-full">
+        <section class="sticky top-0 flex h-16 w-full items-center justify-between px-6">
+            <a href="/order">
+                <i class="fa-solid fa-xmark fa-xl text-white"></i>
+            </a>
+        </section>
+        <section class="flex h-[70vh] flex-col items-center justify-center gap-1">
+          <i class="fa-solid fa-circle-check mb-4 text-white" style="font-size: 100px"></i>
+          <h1 class="text-xl font-semibold text-white">Terima kasih!</h1>
+          <p class="font-medium text-white">Pembayaran berhasil dilakukan</p>
+        </section>
+      </main>
+    </div>
+  </x-slot>
+</x-layouts.app>
