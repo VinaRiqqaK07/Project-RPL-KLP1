@@ -1,5 +1,5 @@
 <section
-  class="fixed top-32 flex h-fit max-h-[85vh] w-[400px] flex-col gap-5 overflow-y-auto rounded-t-3xl bg-white px-5 pb-5"
+  class="fixed top-32 flex h-fit max-h-[85vh] w-[400px] flex-col gap-5 overflow-y-auto rounded-t-3xl bg-white px-5 pb-12"
 >
   <header class="sticky top-0 flex items-center justify-between bg-white pb-2 pt-5">
     <p class="text-lg font-semibold">Detail Menu</p>
