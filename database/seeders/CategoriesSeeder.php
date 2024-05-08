@@ -14,25 +14,36 @@ class CategoriesSeeder extends Seeder
     public function run(): void
     {
         //
-        DB::table('categories')->insert([
-            'name' => 'Nasi',
+        DB::table('categories')->insert(
+            [
+            'name' => 'Makanan',
             'created_at' => now(),
             'updated_at' => now(),
-        ]);
-        DB::table('categories')->insert([
-            'name' => 'Bakso',
-            'created_at' => now(),
-            'updated_at' => now(),
-        ]);
-        DB::table('categories')->insert([
-            'name' => 'Snack',
-            'created_at' => now(),
-            'updated_at' => now(),
-        ]);
-        DB::table('categories')->insert([
+            ],
+        );
+
+        DB::table('categories')->insert(
+            [
             'name' => 'Minuman',
             'created_at' => now(),
             'updated_at' => now(),
-        ]);
+            ],
+        );
+        
+        DB::table('categories')->insert(
+            [
+            'name' => 'Snack',
+            'created_at' => now(),
+            'updated_at' => now(),
+            ],
+        );
+
+        DB::table('categories')->insert(
+            [
+            'name' => 'Bakso',
+            'created_at' => now(),
+            'updated_at' => now(),
+            ],
+        );
     }
 }
