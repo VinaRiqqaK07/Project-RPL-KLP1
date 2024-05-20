@@ -3,13 +3,14 @@
 >
   <header class="sticky top-0 flex items-center justify-between bg-white pb-2 pt-5">
     <p class="text-lg font-semibold">Detail Menu</p>
-
+    
     <button id="closeMenuDetail">
       <i class="fa-solid fa-circle-xmark fa-lg"></i>
     </button>
   </header>
 
   <img
+    id="menuImage"
     src="https://www.bifolcomatty.co.uk/wp-content/uploads/2019/08/placeholder-square.jpg"
     alt=""
     class="h-40 w-full rounded-xl object-cover"
@@ -20,15 +21,16 @@
   </section>
 
   <section class="flex flex-col gap-3">
-    <p class="text-lg font-semibold">Nama Menu</p>
-    <p class="text-base">Rp20.000</p>
+    <p id="menuName" class="text-lg font-semibold">{{ $name ?? "Nama Menu" }}</p>
+    <p id="menuPrice" class="text-base">Rp{{ $price ?? number_format(20000) }}</p>
   </section>
 
   <section class="flex flex-col gap-1">
     <p class="text-base font-semibold">Deskripsi</p>
-    <p>
+    <p id="menuDescription">
+      {{ $deskripsi ?? "
       Lorem ipsum dolor sit amet consectetur adipisicing elit. Sed, ipsam dolor consequatur amet aliquam non cum iusto
-      quibusdam necessitatibus ea libero, error omnis, eaque mollitia corporis et? Exercitationem, cumque dolorem.
+      quibusdam necessitatibus ea libero, error omnis, eaque mollitia corporis et? Exercitationem, cumque dolorem." }}
     </p>
   </section>
 
@@ -37,7 +39,7 @@
     <div class="rounded-xl bg-[#F3F3F3] p-3">
       <textarea
         name="Tulis Catatan"
-        id=""
+        id="menuNote"
         rows="3"
         class="w-full border-none bg-[#F3F3F3] text-xs outline-none"
         placeholder="Tulis Catatan..."
@@ -50,7 +52,7 @@
 
     <section class="flex items-center gap-4 text-center">
       <i class="fa-regular fa-square-minus fa-xl text-gray-400"></i>
-      <p class="rounded-full bg-[#F1F2F2] px-6 py-1">{{ $qty ?? 1 }}</p>
+      <p id="qty" class="rounded-full bg-[#F1F2F2] px-6 py-1">{{ $qty ?? 1 }}</p>
       <i class="fa-regular fa-square-plus fa-xl text-gray-400"></i>
     </section>
   </section>
@@ -58,7 +60,14 @@
   <section
     class="w-full cursor-pointer rounded-lg bg-[#5A973C] py-3 text-center text-sm font-semibold text-white"
     id="showToast"
+    onclick="event.preventDefault();document.getElementById('addToCart').submit();"
   >
-    <p>Tambah ke Keranjang</p>
+      <p>Tambah ke keranjang</p>
+      <form id="addToCart" method="post" action="{{ route('/order/store')  }}">
+        @csrf
+        <input type="hidden" name="id" id="menuID">
+        <input type="hidden" name="qty" value="1" id="menuQtyInput">
+        
+      </form>
   </section>
 </section>
