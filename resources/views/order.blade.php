@@ -62,19 +62,15 @@
         <section class="flex max-h-[62.5vh] flex-wrap justify-between overflow-y-auto">
           @if(!empty($menus))
             @foreach ($menus as $menu)
+            <div onclick="showMenuDetails({{ $menu->id }})">
               <x-card-menu>
+                <x-slot:id>{{ $menu->id }}</x-slot>
                 <x-slot:name>{{ $menu->name }}</x-slot>
                 <x-slot:description>{{ $menu->description }}</x-slot>
-                <x-slot:price>Rp{{ number_format($menu->price) }}</x-slot>
+                <x-slot:price>Rp {{ number_format($menu->price, 2, ',', '.') }}</x-slot>
               </x-card-menu>
+            </div>
             @endforeach
-            <x-card-menu />
-            <x-card-menu />
-            <x-card-menu />
-            <x-card-menu />
-            <x-card-menu />
-            <x-card-menu />
-            <x-card-menu />
           @else
               <!--Set Menu kosong bagaimana-->
               <div></div>
@@ -85,7 +81,9 @@
       </main>
 
       <div id="menuDetail" class="z-50 hidden">
-        <x-menu-detail />
+        <x-menu-detail>
+          <x-slot:name>{{ $menu->name }}</x-slot>
+        </x-menu-detail>
       </div>
 
       <div id="toast" class="z-50 hidden">
@@ -94,10 +92,27 @@
     </div>
 
     <script>
+      function showMenuDetails(menuId){
+          console.log('Fetching ID :', menuId);
+          fetch(`/order/${menuId}`)
+          .then(response=>response.json())
+          .then(data => {
+            console.log('Data received', data);
+            document.getElementById('menuID').value = data.id;
+            document.getElementById('menuName').innerText = data.name;
+            document.getElementById('menuPrice').innerText = data.price.toLocaleString('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 2 }).replace('IDR', '').trim();;
+            document.getElementById('menuDescription').innerText = data.description;
+            if(data.image!=null){
+              document.getElementById('menuImage').src = data.image;
+            }
+            modalBackdrop.classList.remove('hidden');
+            menuDetail.classList.remove('hidden');
+          })
+          .catch(error => console.error('Error fetching menu details:', error));
+      }
+
       document.addEventListener('DOMContentLoaded', () => {
         var modalBackdrop = document.getElementById('modalBackdrop');
-
-        var showMenuDetailButton = document.getElementById('showMenuDetail');
         var menuDetail = document.getElementById('menuDetail');
         var closeMenuDetailButton = document.getElementById('closeMenuDetail');
 
@@ -105,11 +120,16 @@
         var toast = document.getElementById('toast');
         var closeToast = document.getElementById('closeToast');
 
-        showMenuDetailButton.addEventListener('click', () => {
-          modalBackdrop.classList.remove('hidden');
-          menuDetail.classList.remove('hidden');
-        });
-
+        /*
+        var showMenuDetailButton = document.querySelectorAll('.menu-card');
+        showMenuDetailButton.forEach(card => {
+            card.addEventListener('click', () => {
+              const menuId = this.id.replace('showMenuDetail-', '');
+              console.log('Menu Id: ', menuId);
+              showMenuDetails(menuId);
+            });
+          });
+*/
         closeMenuDetailButton.addEventListener('click', () => {
           menuDetail.classList.add('hidden');
           modalBackdrop.classList.add('hidden');
@@ -121,7 +141,7 @@
           toast.classList.remove('hidden');
           setTimeout(() => {
             toast.classList.add('hidden');
-          }, 5000);
+          }, 2000);
         });
 
         closeToast.addEventListener('click', () => {
