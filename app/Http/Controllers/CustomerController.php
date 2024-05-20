@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Menu;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
 
 class CustomerController extends Controller
 {
@@ -22,9 +23,17 @@ class CustomerController extends Controller
         ]);
     }
 
+    public function detailMenu($id)
+    {
+        $menu = Menu::find($id);
+        return response()->json($menu);
+    }
+
     public function checkout()
     {
+        $cart = session()->get('cart', []);
         //echo('Halo');
+        /*
         $list = $this->list_pesanan;
 
         $list = [
@@ -50,14 +59,60 @@ class CustomerController extends Controller
             
         }
         unset($pesanan);
-
+*/
         return view('check-out',[
-            'list_pesanan' => $list
+            'list_pesanan' => $cart,
+            'cart' => $cart,
         ]);
+    }
+
+    public function addToCart(Request $request)
+    {
+        $menuId = $request->id;
+        $menuQty = $request->qty;
+        //echo('Halo');
+
+        //dd($menuId, $menuQty);
+
+        $menu = Menu::find($menuId);
+
+        if(!$menu) {
+            return redirect()->back()->with('error', 'Menu tidak ditemukan');
+        }
+
+        $cart = session()->get('cart', []);
+
+        if(isset($cart[$menuId])) {
+            $cart[$menuId]['qty'] += $menuQty;
+        } else {
+            $cart[$menuId] = [
+                'name' => $menu->name,
+                'price' => $menu->price,
+                'qty' => $menuQty,
+            ];
+        }
+
+        session()->put('cart', $cart);
+
+        return redirect()->back()->with('success', 'Item berhasil ditambahkan');
+    }
+
+    public function removeFromCart($menuId)
+    {
+        $cart = session()->get('cart', []);
+
+        if(isset($cart[$menuId])){
+            unset($cart[$menuId]);
+        }
+
+        session()->put('cart', $cart);
+
+        return redirect()->back()->with('success', 'Item berhasil dihapus');
     }
 
     public function paymentSuccess()
     {
+        Session::forget('cart');
         return view('payment-success');
     }
 

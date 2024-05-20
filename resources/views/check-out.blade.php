@@ -23,19 +23,14 @@
             @foreach ($list_pesanan as $pesanan)
               <x-card-order>
                 <x-slot:name>{{ $pesanan["name"] }}</x-slot>
-                <x-slot:price>{{ $pesanan["price"] }}</x-slot>
+                <x-slot:price>Rp{{ number_format($pesanan["price"], 2, ',', '.') }}</x-slot>
                 <x-slot:qty>{{ $pesanan["qty"] }}</x-slot>
-                <x-slot:image>{{ $pesanan["image"] }}</x-slot>
-                <x-slot:note>{{ $pesanan["note"] }}</x-slot>
               </x-card-order>
             @endforeach
-
-            <x-card-order></x-card-order>
-            <x-card-order></x-card-order>
           </section>
         @endif
       </main>
-      @if (! empty($list_pesanan))
+      @if (!empty($list_pesanan))
         <footer class="fixed bottom-0 w-[400px] bg-white p-4" height="60">
           <section class="flex flex-row items-center justify-between">
             <section class="flex flex-col">
