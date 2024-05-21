@@ -1,6 +1,6 @@
 <x-layouts.app>
   <x-slot:slot>
-    <div class="h-full">
+    <div class="relative mx-auto h-full w-[400px]">
       <header class="sticky top-0 flex h-16 w-full items-center justify-between bg-orange-500 px-4">
         <a href="/order">
           <i class="fa-solid fa-arrow-left fa-lg text-white"></i>
@@ -23,14 +23,16 @@
             @foreach ($list_pesanan as $pesanan)
               <x-card-order>
                 <x-slot:name>{{ $pesanan["name"] }}</x-slot>
-                <x-slot:price>Rp{{ number_format($pesanan["price"], 2, ',', '.') }}</x-slot>
+                <x-slot:price>
+                  Rp{{ number_format($pesanan["price"], 2, ",", ".") }}
+                </x-slot>
                 <x-slot:qty>{{ $pesanan["qty"] }}</x-slot>
               </x-card-order>
             @endforeach
           </section>
         @endif
       </main>
-      @if (!empty($list_pesanan))
+      @if (! empty($list_pesanan))
         <footer class="fixed bottom-0 w-[400px] bg-white p-4" height="60">
           <section class="flex flex-row items-center justify-between">
             <section class="flex flex-col">
