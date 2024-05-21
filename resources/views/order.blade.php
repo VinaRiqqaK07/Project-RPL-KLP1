@@ -4,7 +4,7 @@
 
 <x-layouts.app>
   <x-slot:slot>
-    <div class="h-full bg-sunset-orange">
+    <div class="relative mx-auto h-full w-[400px] bg-sunset-orange">
       <header class="flex flex-col gap-4 px-8 py-6">
         <section class="flex gap-4">
           <img
@@ -60,20 +60,20 @@
         </section>
 
         <section class="flex max-h-[62.5vh] flex-wrap justify-between overflow-y-auto">
-          @if(!empty($menus))
+          @if (! empty($menus))
             @foreach ($menus as $menu)
-            <div onclick="showMenuDetails({{ $menu->id }})">
-              <x-card-menu>
-                <x-slot:id>{{ $menu->id }}</x-slot>
-                <x-slot:name>{{ $menu->name }}</x-slot>
-                <x-slot:description>{{ $menu->description }}</x-slot>
-                <x-slot:price>Rp {{ number_format($menu->price, 2, ',', '.') }}</x-slot>
-              </x-card-menu>
-            </div>
+              <div onclick="showMenuDetails({{ $menu->id }})">
+                <x-card-menu>
+                  <x-slot:id>{{ $menu->id }}</x-slot>
+                  <x-slot:name>{{ $menu->name }}</x-slot>
+                  <x-slot:description>{{ $menu->description }}</x-slot>
+                  <x-slot:price>Rp {{ number_format($menu->price, 2, ",", ".") }}</x-slot>
+                </x-card-menu>
+              </div>
             @endforeach
           @else
-              <!--Set Menu kosong bagaimana-->
-              <div></div>
+            <!--Set Menu kosong bagaimana-->
+            <div></div>
           @endif
         </section>
 
@@ -92,23 +92,26 @@
     </div>
 
     <script>
-      function showMenuDetails(menuId){
-          console.log('Fetching ID :', menuId);
-          fetch(`/order/${menuId}`)
-          .then(response=>response.json())
-          .then(data => {
+      function showMenuDetails(menuId) {
+        console.log('Fetching ID :', menuId);
+        fetch(`/order/${menuId}`)
+          .then((response) => response.json())
+          .then((data) => {
             console.log('Data received', data);
             document.getElementById('menuID').value = data.id;
             document.getElementById('menuName').innerText = data.name;
-            document.getElementById('menuPrice').innerText = data.price.toLocaleString('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 2 }).replace('IDR', '').trim();;
+            document.getElementById('menuPrice').innerText = data.price
+              .toLocaleString('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 2 })
+              .replace('IDR', '')
+              .trim();
             document.getElementById('menuDescription').innerText = data.description;
-            if(data.image!=null){
+            if (data.image != null) {
               document.getElementById('menuImage').src = data.image;
             }
             modalBackdrop.classList.remove('hidden');
             menuDetail.classList.remove('hidden');
           })
-          .catch(error => console.error('Error fetching menu details:', error));
+          .catch((error) => console.error('Error fetching menu details:', error));
       }
 
       document.addEventListener('DOMContentLoaded', () => {

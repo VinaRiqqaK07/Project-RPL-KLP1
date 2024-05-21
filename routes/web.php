@@ -14,12 +14,16 @@ use App\Http\Controllers\CustomerController;
 |
 */
 
+Route::get('/employee', function () {
+    return view('employee.main-page');
+});
 
 Route::get('/order/checkout', [CustomerController::class, 'checkout']) -> name('checkout');
 Route::get('/order/{id}', [CustomerController::class, 'detailMenu'])->name('order.detail');
 Route::get('/order/checkout/payment', [CustomerController::class, 'paymentSuccess']) -> name('payment');
 Route::post('/order/store', [CustomerController::class, 'addToCart'])->name('/order/store');
 Route::resource('/order', CustomerController::class);
+
 
 
 Route::get('/', function () {
