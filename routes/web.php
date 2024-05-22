@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\EmployeeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,16 +15,21 @@ use App\Http\Controllers\CustomerController;
 |
 */
 
-Route::get('/employee', function () {
-    return view('employee.main-page');
-});
 
+Route::delete('/order/remove/{id}', [CustomerController::class, 'removeFromCart']) -> name('order.remove');
+Route::delete('/order/clear', [CustomerController::class, 'clearCart'])->name('order.clear');
 Route::get('/order/checkout', [CustomerController::class, 'checkout']) -> name('checkout');
 Route::get('/order/{id}', [CustomerController::class, 'detailMenu'])->name('order.detail');
 Route::get('/order/checkout/payment', [CustomerController::class, 'paymentSuccess']) -> name('payment');
 Route::post('/order/store', [CustomerController::class, 'addToCart'])->name('/order/store');
+Route::post('/order/place', [CustomerController::class, 'placeOrder'])->name('order.place');
 Route::resource('/order', CustomerController::class);
 
+Route::resource('/employee', EmployeeController::class);
+
+Route::get('/dicoba', function () {
+    return view('dicoba');
+});
 
 
 Route::get('/', function () {
