@@ -14,7 +14,7 @@
                     <p class="bg-gray-200 w-8 h-6 rounded-lg">{{ $qty ?? 1 }}</p>
                     <i class="fa-regular fa-square-plus fa-lg text-gray-400"></i>
                 </section>
-                <button id="deleteButton" class="pe-1">
+                <button id="deleteButton" class="pe-1" onclick="removeFromCart({{ $id }})">
                     <i class="fa-solid fa-trash-can fa-lg text-red-500 "></i>
                 </button>
             </section>

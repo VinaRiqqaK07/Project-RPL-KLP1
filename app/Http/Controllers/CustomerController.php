@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Menu;
+use App\Models\Orders;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\DB;
 
 class CustomerController extends Controller
 {
@@ -109,12 +111,62 @@ class CustomerController extends Controller
 
         return redirect()->back()->with('success', 'Item berhasil dihapus');
     }
+    public function clearCart()
+    {
+        session()->forget('cart');
+        return redirect()->back()->with('success', 'Keranjang berhasil dikosongkan');
+    }
+
+    public function placeOrder(Request $request)
+    {
+        $request->validate([
+            'customer_name' => 'required|string|max:255',
+            'table_number' => 'required|integer',
+        ]);
+
+        try {
+            //code...
+            DB::beginTransaction();
+
+            $customerName = $request -> input('customer_name');
+            $tableNumber = $request -> input('table_number');
+
+            $cart = session()->get('cart', []);
+            $grossAmount = 0;
+
+            foreach ($cart as $item){
+                $grossAmount += $item['price'] * $item['qty'];
+            }
+
+            $order = Orders::create([
+                'customer_name' => $customerName,
+                'table_number' => $tableNumber,
+                'discount_id' => null,
+                'gross_amount' => $grossAmount,
+                'status' => 'Dipesan'
+            ]);
+
+            session()->forget('cart');
+
+            DB::commit();
+
+            return redirect()->route('payment')->with('success', 'Order Tersimpan');
+
+
+        } catch (\Exception $e) {
+            //throw $th;
+            DB::rollback();
+            return redirect()->back()->with('error', 'Order failed: '. $e->getMessage());
+        }
+    }
 
     public function paymentSuccess()
     {
         Session::forget('cart');
         return view('payment-success');
     }
+
+    
 
     /**
      * Show the form for creating a new resource.
