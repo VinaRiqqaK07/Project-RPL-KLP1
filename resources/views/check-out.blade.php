@@ -15,11 +15,11 @@
         @endif
       </header>
 
-      <main class="h-full w-full bg-gray-100">
+      <main class="max-h-full w-full bg-gray-100 pb-8">
         @if (empty($list_pesanan))
           <x-empty-cart></x-empty-cart>
         @else
-          <section class="max-h-full overflow-y-auto px-2 pb-4 pt-1">
+          <section class="overflow-y-auto px-2 pb-4 pt-1">
             @foreach ($list_pesanan as $menuId => $pesanan)
               <x-card-order>
                 <x-slot:id>{{ $menuId }}</x-slot>
@@ -38,7 +38,7 @@
           <section class="flex flex-row items-center justify-between">
             <section class="flex flex-col">
               <p class="text-sm">Jumlah bayar</p>
-              <p class="text-sm font-bold">Rp{{ $sumprice ?? 200000 }}</p>
+              <p class="text-sm font-bold">Rp{{ number_format(($sumprice ?? 0), 2, ",", ".") }}</p>
             </section>
             <section class="">
               <button id="showModal" class="text-md w-40 rounded-lg bg-[#70B44E] px-4 py-2 font-semibold text-white">
