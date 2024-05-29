@@ -6,28 +6,33 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class Orders extends Model
+class OrderItems extends Model
 {
     use HasFactory;
     // Table Name
-    protected $table = 'orders';
-
+    protected $guarded = [];
+/*
     // Fillable
     protected $fillable = [
-        'gross_amount',
-        'customer_name',
-        'table_number',
-        'status',
+        'qty',
+        'total_amount',
+        'note',
     ];
 
     // Hidden from JSON
     protected $hidden = [
-        'order_id', 'discount_id',
+        'order_item_id', 'orders_id', 'menu_id',
         'created_at', 'updated_at',
     ];
-
-    public function discount(): BelongsTo
+*/
+    public function orders(): BelongsTo
     {
-        return $this->belongsTo(Discount::class);
+        return $this->belongsTo(Orders::class);
     }
+
+    public function menu(): BelongsTo
+    {
+        return $this->belongsTo(Menu::class);
+    }
+
 }

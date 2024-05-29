@@ -36,31 +36,36 @@
         <section class="flex flex-col gap-3 p-2">
           <p class="text-sm font-bold">Kategori Menu</p>
 
-          <div class="flex justify-between px-6">
-            <x-category :active="$category == 'All'">
-              <x-slot:icon>fa-solid fa-utensils</x-slot>
-              <x-slot:name>All</x-slot>
-            </x-category>
+          <div id="categoriesContainer" class="flex justify-between px-6">
+            <form method="GET" action="{{ route("order.index") }}" class="flex flex-col items-center gap-1">
+              <button
+                type="submit"
+                name="category"
+                value="All"
+                class="{{ "All" == $activeCategory ? "bg-red-500" : "bg-[#D9D9D9]" }} flex h-6 w-6 items-center justify-center rounded-full p-4"
+              >
+                <i class="fa-solid fa-utensils"></i>
+              </button>
+              <p class="text-xs font-semibold">All</p>
+            </form>
 
-            <x-category :active="$category == 'Makanan'">
-              <x-slot:icon>fa-solid fa-bowl-food</x-slot>
-              <x-slot:name>Makanan</x-slot>
-            </x-category>
-
-            <x-category>
-              <x-slot:icon>fa-solid fa-wine-glass</x-slot>
-              <x-slot:name>Minuman</x-slot>
-            </x-category>
-
-            <x-category>
-              <x-slot:icon>fa-solid fa-cookie-bite</x-slot>
-              <x-slot:name>Snack</x-slot>
-            </x-category>
+            @foreach ($categories as $index => $category)
+              <form method="GET" action="{{ route("order.index") }}" class="flex flex-col items-center gap-1">
+                <button
+                  type="submit"
+                  name="category"
+                  value="{{ $category->name }}"
+                  class="{{ $category->name == $activeCategory ? "bg-red-500" : "bg-[#D9D9D9]" }} flex h-6 w-6 items-center justify-center rounded-full p-4"
+                >
+                  <i class="{{ $category->icon }}"></i>
+                </button>
+                <p class="text-xs font-semibold">{{ $category->name }}</p>
+              </form>
+            @endforeach
           </div>
         </section>
-
-        <section class="flex max-h-[62.5vh] flex-wrap justify-between overflow-y-auto">
-          @if (! empty($menus))
+        @if ($menus->isNotEmpty())
+          <section class="flex max-h-[62.5vh] flex-wrap justify-between overflow-y-auto">
             @foreach ($menus as $menu)
               <div onclick="showMenuDetails({{ $menu->id }})">
                 <x-card-menu>
@@ -71,19 +76,24 @@
                 </x-card-menu>
               </div>
             @endforeach
-          @else
-            <!--Set Menu kosong bagaimana-->
-            <div></div>
-          @endif
-        </section>
+          </section>
+        @else
+          <!--Set Menu kosong bagaimana-->
+          <section class="flex h-[62.5vh] w-full flex-col items-center justify-center gap-2">
+            <h1 class="text-sm font-semibold">Mohon maaf, menu untuk kategori ini sedang kosong</h1>
+            <p class="text-sm">Silakan melihat menu lain.</p>
+          </section>
+        @endif
 
         <div id="modalBackdrop" class="fixed left-0 top-0 hidden h-full w-full bg-gray-500 bg-opacity-50"></div>
       </main>
 
       <div id="menuDetail" class="z-50 hidden">
-        <x-menu-detail>
-          <x-slot:name>{{ $menu->name }}</x-slot>
-        </x-menu-detail>
+        @if ($menus->isNotEmpty())
+          <x-menu-detail>
+            <x-slot:name>{{ $menu->name }}</x-slot>
+          </x-menu-detail>
+        @endif
       </div>
 
       <div id="toast" class="z-50 hidden">
@@ -133,19 +143,24 @@
             });
           });
 */
-        closeMenuDetailButton.addEventListener('click', () => {
-          menuDetail.classList.add('hidden');
-          modalBackdrop.classList.add('hidden');
-        });
 
-        showToastButton.addEventListener('click', () => {
-          menuDetail.classList.add('hidden');
-          modalBackdrop.classList.add('hidden');
-          toast.classList.remove('hidden');
-          setTimeout(() => {
-            toast.classList.add('hidden');
-          }, 2000);
-        });
+        if (closeMenuDetailButton) {
+          closeMenuDetailButton.addEventListener('click', () => {
+            menuDetail.classList.add('hidden');
+            modalBackdrop.classList.add('hidden');
+          });
+        }
+
+        if (showToastButton) {
+          showToastButton.addEventListener('click', () => {
+            menuDetail.classList.add('hidden');
+            modalBackdrop.classList.add('hidden');
+            toast.classList.remove('hidden');
+            setTimeout(() => {
+              toast.classList.add('hidden');
+            }, 2000);
+          });
+        }
 
         closeToast.addEventListener('click', () => {
           toast.classList.add('hidden');
