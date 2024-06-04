@@ -14,11 +14,9 @@ return new class extends Migration
         Schema::create('menus', function (Blueprint $table) {
             $table->id();
             $table->foreignId('categories_id')->constrained();
-            $table->foreignId('discount_id')->nullable()->constrained();
             $table->string('name');
             $table->integer('price');
             $table->integer('quantity')->nullable();
-            // $table->enum('status', ['Ready', 'Not Ready']);
             $table->boolean('status');
             $table->text('description');
             // make image nullable?

@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Discount extends Model
 {
@@ -12,8 +12,8 @@ class Discount extends Model
 
     protected $guarded = [];
 
-    public function menus(): HasMany
+    public function menus(): BelongsToMany
     {
-        return $this->hasMany(Menu::class);
+        return $this->belongsToMany(Menu::class);
     }
 }

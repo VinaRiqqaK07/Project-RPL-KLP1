@@ -4,6 +4,7 @@ namespace App\Filament\Admin\Resources;
 
 use App\Filament\Admin\Resources\MenuResource\Pages;
 use App\Filament\Admin\Resources\MenuResource\RelationManagers;
+use App\Models\Discount;
 use App\Models\Menu;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -11,6 +12,7 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
+use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
@@ -54,13 +56,13 @@ class MenuResource extends Resource
 
                         Forms\Components\Section::make('Image')
                             ->schema([
-                                // SpatieMediaLibraryFileUpload::make('image')
-                                //     ->image()
-                                //     ->imageEditor()
-                                //     ->imageResizeMode('contain')
-                                //     ->imageCropAspectRatio('16:9')
-                                //     ->collection('menu-images')
-                                //     ->hiddenLabel()
+                                SpatieMediaLibraryFileUpload::make('image')
+                                    ->image()
+                                    ->imageEditor()
+                                    ->imageResizeMode('contain')
+                                    ->imageCropAspectRatio('16:9')
+                                    ->collection('menu-images')
+                                    ->hiddenLabel()
                             ])
                             ->collapsible(),
                     ])
@@ -79,8 +81,12 @@ class MenuResource extends Resource
                                 Forms\Components\Select::make('discount_id')
                                     ->label('Discount')
                                     ->native(false)
-                                    ->relationship('discount')
-                                    ->getOptionLabelFromRecordUsing(fn($record) => $record->name . ' - ' . $record->percentage)
+                                    ->options(Discount::all()->pluck('name', 'id'))
+                                    ->relationship('discount', 'name')
+                                    // ->relationship('discount', 'name', fn($query) => dd($query))
+                                    // ->getOptionLabelsUsing(fn($record) => $record->name . ' - ' . $record->percentage)
+                                    ->multiple()
+                                    // ->getOptionLabelFromRecordUsing(fn($record) => $record->name . ' - ' . $record->percentage)
                             ])
                             ->columns(1),
                     ])
@@ -93,13 +99,24 @@ class MenuResource extends Resource
     {
         return $table
             ->columns([
+                SpatieMediaLibraryImageColumn::make('image')
+                    ->collection('menu-images'),
                 Tables\Columns\TextColumn::make('name')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('category.name')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('discount')
                     ->searchable()
-                    ->formatStateUsing(fn ($state) => $state->name . ' - ' . $state->percentage),
+                    ->formatStateUsing(function ($record) {
+                        $discountList = $record->discount->map(function ($discount) {
+                            return '- ' . $discount->name;
+                        })->implode('<br>');
+
+                        return $discountList;
+                    })
+                    ->html(),
+                    // ->formatStateUsing(fn ($record) => dd($record->discount->first())),
+                    // ->formatStateUsing(fn ($state) => $state->name . ' - ' . $state->percentage),
                 Tables\Columns\TextColumn::make('price')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('quantity')
