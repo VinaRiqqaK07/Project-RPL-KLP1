@@ -1,6 +1,6 @@
 <x-layouts.app>
   <x-slot:slot>
-    <div class="relative mx-auto h-full w-[400px]">
+    <div class="relative mx-auto min-h-dvh w-[400px]">
       <header class="sticky top-0 flex h-16 w-full items-center justify-between bg-orange-500 px-4">
         <a href="/order">
           <i class="fa-solid fa-arrow-left fa-lg text-white"></i>
@@ -33,12 +33,12 @@
           </section>
         @endif
       </main>
-      @if (!empty($list_pesanan))
+      @if (! empty($list_pesanan))
         <footer class="fixed bottom-0 w-[400px] bg-white p-4" height="60">
           <section class="flex flex-row items-center justify-between">
             <section class="flex flex-col">
               <p class="text-sm">Jumlah bayar</p>
-              <p class="text-sm font-bold">Rp{{ number_format(($sumprice ?? 0), 2, ",", ".") }}</p>
+              <p class="text-sm font-bold">Rp{{ number_format($sumprice ?? 0, 2, ",", ".") }}</p>
             </section>
             <section class="">
               <button id="showModal" class="text-md w-40 rounded-lg bg-[#70B44E] px-4 py-2 font-semibold text-white">
@@ -65,14 +65,14 @@
 
     <script>
       let menuIdToDelete;
-      let csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content'); 
+      let csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
-      function removeFromCart(menuId){
+      function removeFromCart(menuId) {
         console.log('ada??', menuId);
-        menuIdToDelete=menuId;
+        menuIdToDelete = menuId;
         deleteModal.classList.remove('hidden');
         modalBackdrop.classList.remove('hidden');
-      };
+      }
 
       document.addEventListener('DOMContentLoaded', () => {
         var showModalButton = document.getElementById('showModal');
@@ -88,8 +88,7 @@
         var deleteAllButton = document.getElementById('deleteAll');
         var deleteAllModal = document.getElementById('deleteAllModal');
         var closeDeleteAll = document.getElementById('closeDeleteAll');
-        var deleteAllItem = document.getElementById('deleteAllItem')
-
+        var deleteAllItem = document.getElementById('deleteAllItem');
 
         showModalButton.addEventListener('click', () => {
           modalBackdrop.classList.remove('hidden');
@@ -99,12 +98,12 @@
           modalSheet.classList.add('hidden');
           modalBackdrop.classList.add('hidden');
         });
-/*
+        /*
         showDeleteButton.addEventListener('click', () => {
           deleteModal.classList.remove('hidden');
           modalBackdrop.classList.remove('hidden');
         });*/
-        
+
         closeDeleteButton.addEventListener('click', () => {
           deleteModal.classList.add('hidden');
           modalBackdrop.classList.add('hidden');
@@ -117,21 +116,21 @@
             headers: {
               'X-CSRF-TOKEN': csrfToken,
               'Content-Type': 'application/json',
-              'Accept': 'application/json'
-            }
+              Accept: 'application/json',
+            },
           })
-          .then(response => {
-            if(response.ok){
-              console.log("berhasil?? ", response);
-              window.location.reload();
-              //window.location.href = '/order/checkout';
-            }else{
-              console.log("gagal :(");
-            }
-          })
-          .catch(error => {
-            console.error("error: ", error);
-          });
+            .then((response) => {
+              if (response.ok) {
+                console.log('berhasil?? ', response);
+                window.location.reload();
+                //window.location.href = '/order/checkout';
+              } else {
+                console.log('gagal :(');
+              }
+            })
+            .catch((error) => {
+              console.error('error: ', error);
+            });
         });
 
         deleteAllButton.addEventListener('click', () => {
@@ -150,22 +149,21 @@
             headers: {
               'X-CSRF-TOKEN': csrfToken,
               'Content-Type': 'application/json',
-              'Accept': 'application/json'
-            }
+              Accept: 'application/json',
+            },
           })
-          .then(response => {
-            if(response.ok){
-              console.log('berhasil hapus semua: ', response);
-              window.location.reload();
-            }else{
-              console.log('gagal hapus semua');
-            }
-          })
-          .catch(error => {
-            console.error('error delete all: ', error);
-          });
+            .then((response) => {
+              if (response.ok) {
+                console.log('berhasil hapus semua: ', response);
+                window.location.reload();
+              } else {
+                console.log('gagal hapus semua');
+              }
+            })
+            .catch((error) => {
+              console.error('error delete all: ', error);
+            });
         });
-        
       });
     </script>
   </x-slot>

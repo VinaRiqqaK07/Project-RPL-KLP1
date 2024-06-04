@@ -4,7 +4,7 @@
 
 <x-layouts.app>
   <x-slot:slot>
-    <div class="relative mx-auto h-full w-[400px] bg-sunset-orange">
+    <div class="relative mx-auto min-h-dvh w-[400px] bg-sunset-orange">
       <header class="flex flex-col gap-4 px-8 py-6">
         <section class="flex gap-4">
           <img
@@ -16,19 +16,24 @@
           <p class="font-semibold text-white">Rumah Makan</p>
         </section>
 
-        <section class="flex h-10 w-auto flex-col justify-center rounded-xl bg-moon-gray p-2">
+        <section class="flex h-10 w-auto items-center gap-2 rounded-xl bg-moon-gray p-2">
           <div class="flex h-full w-full items-center justify-between rounded-xl bg-white p-2">
-            <div class="flex items-center gap-4">
+            <div class="flex w-full items-center gap-4">
               <div>
                 <i class="fa fa-search fa-sm" style="color: #f88c05"></i>
               </div>
-              <input type="text" placeholder="Cari menu..." class="text-xs outline-none" />
+              <input
+                type="text"
+                placeholder="Cari menu..."
+                class="w-full text-xs outline-none"
+                id="search"
+                name="search"
+              />
             </div>
-
-            <a href="/order/checkout">
-              <i class="fa-solid fa-cart-shopping"></i>
-            </a>
           </div>
+          <a href="/order/checkout">
+            <i class="fa-solid fa-cart-shopping"></i>
+          </a>
         </section>
       </header>
 
@@ -73,6 +78,9 @@
                   <x-slot:name>{{ $menu->name }}</x-slot>
                   <x-slot:description>{{ $menu->description }}</x-slot>
                   <x-slot:price>Rp {{ number_format($menu->price, 2, ",", ".") }}</x-slot>
+                  @if ($menu->media->isNotEmpty())
+                    <x-slot:image>{{ $menu->media->first()->getUrl() }}</x-slot>
+                  @endif
                 </x-card-menu>
               </div>
             @endforeach

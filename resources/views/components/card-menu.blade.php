@@ -3,7 +3,7 @@
   id="showMenuDetail"
 >
   <img
-    src="https://www.bifolcomatty.co.uk/wp-content/uploads/2019/08/placeholder-square.jpg"
+    src="{{ $image ?? "https://www.bifolcomatty.co.uk/wp-content/uploads/2019/08/placeholder-square.jpg" }}"
     alt=""
     class="h-20 w-32 rounded-xl object-cover"
   />
