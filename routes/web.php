@@ -25,7 +25,11 @@ Route::post('/order/store', [CustomerController::class, 'addToCart'])->name('/or
 Route::post('/order/place', [CustomerController::class, 'placeOrder'])->name('order.place');
 Route::resource('/order', CustomerController::class);
 
+Route::get('/employee/login', [EmployeeController::class, 'login']);
+Route::get('/employee/setting', [EmployeeController::class, 'setting']);
+
 Route::resource('/employee', EmployeeController::class);
+
 
 Route::get('/dicoba', function () {
     return view('dicoba');
