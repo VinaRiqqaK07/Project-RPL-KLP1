@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Menu;
 use App\Models\Orders;
+use App\Models\Category;
+use App\Models\OrderItems;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\DB;
@@ -15,13 +17,49 @@ class CustomerController extends Controller
      */
     protected $list_pesanan = [];
 
-    public function index()
+    public function index(Request $request)
     {
         //
-        $menus = Menu::all();
+        //$menus = Menu::all();
+        $categories = Category::all();
+
+        $categories->map(function ($category) {
+            switch ($category->name) {
+                case 'Nasi':
+                    # code...
+                    $category->icon = 'fa-solid fa-bowl-food';
+                    break;
+
+                case 'Minuman':
+                    # code...
+                    $category->icon = 'fa-solid fa-wine-glass';
+                    break;
+
+                case 'Snack':
+                    $category->icon = 'fa-solid fa-cookie-bite';
+                    break;
+                
+                default:
+                    # code...
+                    $category->icon = 'fa-solid fa-utensils';
+                    break;
+            }
+            return $category;
+        });
+
+        $activeCategory = $request->input('category', 'All');
+
+        if($activeCategory === 'All'){
+            $menus = Menu::all();
+        } else {
+            $category = Category::where('name', $activeCategory)->first();
+            $menus = Menu::where('categories_id', $category->id)->get();
+        }
         
         return view('order', [
             'menus' => $menus,
+            'categories' => $categories,
+            'activeCategory' => $activeCategory,
         ]);
     }
 
@@ -34,37 +72,15 @@ class CustomerController extends Controller
     public function checkout()
     {
         $cart = session()->get('cart', []);
-        //echo('Halo');
-        /*
-        $list = $this->list_pesanan;
+        $sumprice = 0;
 
-        $list = [
-            [
-                'name' => 'Mie Ayam',
-                'price' => 'Rp22.000',
-                'qty' => 1,
-                'note' => 'Tidak pakai bawang goreng',
-            ],
-            [],
-            [],
-            [],
-        ];
-
-        foreach($list as &$pesanan) {
-            $pesanan += [
-                'name' => 'Nama menu',
-                'price' => 'Rp20.000',
-                'qty' => 1,
-                'image' => 'https://th.bing.com/th/id/OIP.R-2OxDXmafvmLXU57LFELQHaHa?w=167&h=180&c=7&r=0&o=5&dpr=1.3&pid=1.7',
-                'note' => "Masukkan note pesanan..",
-            ];
-            
+        foreach ($cart as $item){
+            $sumprice += $item['price'] * $item['qty'];
         }
-        unset($pesanan);
-*/
         return view('check-out',[
             'list_pesanan' => $cart,
             'cart' => $cart,
+            'sumprice' => $sumprice,
         ]);
     }
 
@@ -146,15 +162,29 @@ class CustomerController extends Controller
                 'status' => 'Dipesan'
             ]);
 
+            DB::commit();
+            $orderId = $order->id;
+
+            //DB::beginTransaction();
+
+            // Buat order items
+            foreach ($cart as $menuId => $item) {
+                OrderItems::create([
+                    'orders_id' => $orderId,
+                    'menu_id' => $menuId,
+                    'qty' => $item['qty'],
+                    'total_amount' => $item['price'] * $item['qty'],
+                    'note' => $item['note'] ?? null, // Pastikan ada kolom note di cart jika ada
+                ]);
+            }
+            //DB::commit();
+
             session()->forget('cart');
 
-            DB::commit();
-
             return redirect()->route('payment')->with('success', 'Order Tersimpan');
-
-
         } catch (\Exception $e) {
             //throw $th;
+            //dd($e->getMessage());
             DB::rollback();
             return redirect()->back()->with('error', 'Order failed: '. $e->getMessage());
         }

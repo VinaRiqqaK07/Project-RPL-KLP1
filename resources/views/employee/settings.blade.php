@@ -1,6 +1,6 @@
 <x-layouts.app>
   <x-slot:slot>
-    <div class="flex h-screen w-full flex-col">
+    <div class="flex h-screen w-full flex-col" style="background-color: rgba(246, 255, 242, 0.949);">
       <!-- Navbar -->
       <nav class="flex items-center justify-between bg-orange-500 p-4">
         <div class="flex items-center">
@@ -25,15 +25,15 @@
 
       <!-- Content -->
       <div class="flex flex-grow items-center justify-center">
-        <section class="flex w-2/3 flex-col gap-6 rounded-2xl bg-white p-10 shadow-lg relative">
+        <section class="flex w-4/5 h-4/5 flex-col gap-6 rounded-2xl bg-white p-10 shadow-lg relative">
           <!-- Icon Close -->
           <i class="fas fa-times absolute top-4 right-4 cursor-pointer"></i>
-          <div class="flex">
-            <div class="w-1/2">
+          <div class="flex h-full">
+            <div class="w-2/5">
               <h1 class="text-left text-2xl font-bold">Account Settings</h1>
               <p class="text-left">Ubah informasi akun kamu di sini</p>
             </div>
-            <div class="w-1/2">
+            <div class="w-3/5">
               <div class="mb-4">
                 <label class="text-lg font-bold block">
                   Employee Name

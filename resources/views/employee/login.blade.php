@@ -1,6 +1,6 @@
 <x-layouts.app>
   <x-slot:slot>
-  <div class="flex h-screen w-full items-center justify-center">
+  <div class="flex h-screen w-full items-center justify-center" style="background-color: rgba(246, 255, 242, 0.949);">
     <section class="flex w-1/3 flex-col gap-6 rounded-2xl bg-white p-10 shadow-lg">
       <h1 class="text-center text-2xl font-bold">Login</h1>
 
