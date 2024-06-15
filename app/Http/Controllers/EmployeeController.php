@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\DB;
 
 class EmployeeController extends Controller
 {
-    //
+    
     public function index()
     {
         $menus = Menu::all();
@@ -19,6 +19,17 @@ class EmployeeController extends Controller
             'menus' => $menus,
             'orderList' => $orderList,
         ]);
+    }
+
+    public function login()
+    {
+        return view('employee.login');
+    }
+
+    public function setting()
+    {
+        return view('employee.settings');
+
     }
 
 }
